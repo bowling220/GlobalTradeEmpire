@@ -3,7 +3,8 @@
     "name": "GlobalTradeEmpire",
     "slug": "GlobalTradeEmpire",
     "version": "1.0.0",
-    "orientation": "landscape",
+    "sdkVersion": "51.0.0", 
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
