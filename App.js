@@ -3,6 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import { View } from 'react-native';
+import Gamepass from './Gamepass';
+
 
 
 
@@ -22,6 +24,7 @@ const App = () => {
             header: () => <EmptyHeader />,
           }}
         />
+         <Stack.Screen name="Gamepass" component={Gamepass} />
       </Stack.Navigator>
     </NavigationContainer>
   );

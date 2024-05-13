@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from './colors';
 
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [resources, setResources] = useState(0);
   const [clickProduction, setClickProduction] = useState(1);
   const [tradeRoutes, setTradeRoutes] = useState([
@@ -348,6 +348,7 @@ const HomeScreen = () => {
           onPress={handleUpgradeTap}
           disabled={resources < 100}
         />
+         <Button title="GamePass" onPress={() => navigation.navigate('Gamepass')} />
         <Button
           title={`Upgrade Trade Post (Level ${tradePostLevel}) - Cost: ${tradePostCost}`}
           onPress={handleUpgradeTradePost}
