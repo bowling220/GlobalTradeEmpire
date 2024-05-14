@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, Share } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from './colors';
+import { useProfile } from './ProfileContext';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -19,6 +20,7 @@ const HomeScreen = ({ navigation }) => {
   const [showQuests, setShowQuests] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
   const [prestigeAvailable, setPrestigeAvailable] = useState(false);
+  const { user, saveUserProfile, logout } = useProfile();
 
   
   useEffect(() => {
@@ -195,7 +197,7 @@ const HomeScreen = ({ navigation }) => {
     return () => clearInterval(eventInterval);
   }, []);
 
-  const saveGameState = async () => {
+  const saveGameState = async (userId) => {
     try {
       const gameState = {
         resources,
@@ -205,35 +207,37 @@ const HomeScreen = ({ navigation }) => {
         playerXP,
         clickProduction
       };
-      await AsyncStorage.setItem('gameState', JSON.stringify(gameState));
+      await AsyncStorage.setItem(`gameState_${userId}`, JSON.stringify(gameState));
     } catch (error) {
       console.error('Failed to save game state:', error);
     }
   };
+  
 
-  const loadGameState = async () => {
+  const loadGameState = async (userId) => {
     try {
-      const gameState = await AsyncStorage.getItem('gameState');
+      const gameState = await AsyncStorage.getItem(`gameState_${userId}`);
       if (gameState) {
         const parsedGameState = JSON.parse(gameState);
         setResources(parsedGameState.resources);
         setPlayerLevel(parsedGameState.playerLevel);
         setTradeRoutes(parsedGameState.tradeRoutes);
-        setPlayerRank(parsedGameState.playerRank); // Set playerRank from parsedGameState
-        setPlayerXP(parsedGameState.playerXP); // Set playerXP from parsedGameState
-        setClickProduction(parsedGameState.clickProduction); // Set clickProduction from parsedGameState
+        setPlayerRank(parsedGameState.playerRank);
+        setPlayerXP(parsedGameState.playerXP);
+        setClickProduction(parsedGameState.clickProduction);
       }
     } catch (error) {
       console.error('Failed to load game state:', error);
     }
   };
+  
 
   useEffect(() => {
-    loadGameState();
+    loadGameState(user.id);
   }, []);
 
   useEffect(() => {
-    saveGameState();
+    saveGameState(user.id);
   }, [resources, playerLevel, tradeRoutes, playerXP, playerRank]);
 
   useEffect(() => {
@@ -335,6 +339,7 @@ const HomeScreen = ({ navigation }) => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Text style={styles.title}>Global Trade Empire</Text>
+        <Text>Welcome, {user ? user.username : 'Guest'}!</Text>
         <Text>Level: {playerLevel}</Text>
         <Text>Rank: {playerRank}</Text>
         <Text>XP: {playerXP} / {50 * playerLevel}</Text>
